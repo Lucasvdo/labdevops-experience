@@ -16,4 +16,11 @@ class Test(unittest.TestCase):
 
     def test_conteudo(self):
         # verifica o retorno do conteudo da pagina
-        self.assertEqual(self.result.data.decode('utf-8'), "Hello World")
+        self.assertEqual(self.result.data.decode('utf-8'), """<!DOCTYPE html>
+<html>
+<body>
+<h2>Hello World</h2>
+<blockquote class="imgur-embed-pub" lang="en" data-id="a/ETkM7Gm" data-context="false" ><a href="//imgur.com/a/ETkM7Gm"></a></blockquote><script async src="//s.imgur.com/min/embed.js" charset="utf-8"></script>
+</body>
+</html>
+""")

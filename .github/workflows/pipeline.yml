@@ -28,28 +28,23 @@ jobs:
           GITHUB_TOKEN: ${{ secrets.GITHUB_TOKEN }}  
           SONAR_TOKEN: ${{ secrets.SONAR_TOKEN }}  
 
-  Deploy:
+      - name: Login to Heroku Container registry
+        env: 
+          HEROKU_API_KEY: ${{ secrets.HEROKU_API_KEY }}
+        run: heroku container:login
+
+      - name: Docker Image & Push Heroku Registry
+        env:
+          HEROKU_API_KEY: ${{ secrets.HEROKU_API_KEY }}
+        run: heroku container:push -a ${{ secrets.HEROKU_APP_NAME }} web
+
+Deploy:
     needs: Build
     runs-on: ubuntu-latest
 
     steps:
-      - name: Checkout Repo
-        uses: actions/checkout@v2
-        with:
-          fetch-depth: 0
-
-      # Autenticação do Heroku CLI via API TOKEN
-      # https://devcenter.heroku.com/articles/authentication
-      - name: Heroku Login
-        run: | 
-            cat > ~/.netrc <<EOF
-              machine api.heroku.com
-                login $HEROKU_EMAIL
-                password $HEROKU_API_KEY
-              machine git.heroku.com
-                login $HEROKU_EMAIL
-                password $HEROKU_API_KEY
-            EOF
+      - name: Deploy Heroku
         env:
-            HEROKU_API_KEY: ${{ secrets.HEROKU_API_KEY }}
-            HEROKU_EMAIL: ${{ secrets.HEROKU_EMAIL }}
+          HEROKU_API_KEY: ${{ secrets.HEROKU_API_KEY }}
+        run: heroku container:release -a ${{ secrets.HEROKU_APP_NAME }} web
+

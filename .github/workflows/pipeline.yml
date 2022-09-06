@@ -5,7 +5,7 @@ name: DevOpsLab Pipeline
 on: 
   push:
     branches:
-      - 00_docker
+      - main
 
 jobs:
   Build:

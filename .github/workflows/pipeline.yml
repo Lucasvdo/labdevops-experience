@@ -33,12 +33,12 @@ jobs:
         env:
           GITHUB_TOKEN: ${{ secrets.GITHUB_TOKEN }}  
           SONAR_TOKEN: ${{ secrets.SONAR_TOKEN }}  
-
+      
       - name: Login to Heroku Container registry
         env: 
           HEROKU_API_KEY: ${{ secrets.HEROKU_API_KEY }}
         run: heroku container:login
-        
+
       - name: Docker Build Image & Push Heroku Registry
         env:
           HEROKU_API_KEY: ${{ secrets.HEROKU_API_KEY }}
@@ -57,7 +57,7 @@ jobs:
         run: | 
           docker build -t ${{ secrets.ARTIFACT_REGISTRY }}/myapp:latest .
           docker push ${{ secrets.ARTIFACT_REGISTRY }}/myapp:latest
-
+    
   DeployHom:
     needs: Build
     runs-on: ubuntu-latest
@@ -73,7 +73,7 @@ jobs:
     steps:
       - name: Checkout Repo
         uses: actions/checkout@v2
-
+      
       - name: Auth GCP AppEngine
         env:
           GOOGLE_CREDENTIALS: ${{ secrets.GOOGLE_CREDENTIALS }}
@@ -90,4 +90,4 @@ jobs:
           image_url: ${{ secrets.ARTIFACT_REGISTRY }}/myapp:latest
 
       - name: Prod Test
-        run: 'curl "${{ steps.appengine.outputs.url }}"'
+        run: 'curl "${{ steps.appengine.outputs.url }}"'  
